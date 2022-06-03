@@ -27,11 +27,25 @@ function Todo() {
     /* テストコード 終了 */
   ]);
 
+  const onChange = (e) => {
+    if(e.key === 'Enter'){
+      const newItem =  {
+        key: getKey(),
+        text: e.target.value,
+        done: false
+      }
+      items.push(newItem);
+      putItems([...items]);
+    }
+  }
   return (
     <div className="panel">
       <div className="panel-heading">
         ITSS ToDoアプリ
       </div>
+      <label>
+        <input className="input" type="text" onKeyDown={(e) => onChange(e)}></input>
+      </label>
       {items.map(item => (
         <TodoItem
         key={item.key}
