@@ -26,34 +26,47 @@ function Todo() {
     { key: getKey(), text: '明日の準備をする', done: false },
     /* テストコード 終了 */
   ]);
-
-  const onChange = (e) => {
-    if(e.key === 'Enter'){
-      const newItem =  {
-        key: getKey(),
-        text: e.target.value,
-        done: false
-      }
-      items.push(newItem);
-      putItems([...items]);
-    }
-  }
+  const handleCheckTodoItem = (i) => {
+    const newItems = items.map((item) => {
+        if(item.key === i.key)
+            item.done = !item.done;
+        return item;
+    });
+      putItems(newItems);
+  };
+  const handleAdd = (text) => {
+      const newItem = {key: getKey(), text: text, done: false};
+      putItems([...items,newItem]);
+  };
+  const [tab,setTab] = useState("すべて");
+  const itemTab = () => {
+      const tabItem = items.filter((item) => {
+          if (tab === "すべて")
+              return item;
+          if (tab === "未完了" && !item.done) {
+              return item;
+          }
+          if (tab === "完了済み" && item.done) {
+              return item;
+          }
+      });
+      return tabItem;
+  };
+  const handleChangeTab = (target) =>{
+      setTab(target);
+  };
   return (
     <div className="panel">
       <div className="panel-heading">
         ITSS ToDoアプリ
       </div>
-      <label>
-        <input className="input" type="text" onKeyDown={(e) => onChange(e)}></input>
-      </label>
-      {items.map(item => (
-        <TodoItem
-        key={item.key}
-        item={item}
-        />
+        <Input onAdd={handleAdd}/>
+        <Filter onClick={handleChangeTab}/>
+      {itemTab().map(item => (
+        <TodoItem item={item} key={item.key} onCheck={handleCheckTodoItem}/>
       ))}
       <div className="panel-block">
-        {items.length} items
+        {itemTab().length} items
       </div>
     </div>
   );
