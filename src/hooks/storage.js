@@ -16,22 +16,22 @@ function useStorage() {
 　
 　/* 副作用を使う */
   useEffect(() => {
-    const todos = JSON.parse(localStorage.getItem('items')) || [];
-    setItems([...todos]);
+    const data = localStorage.getItem(STORAGE_KEY);
+    if(!data){
+      localStorage.setItem(STORAGE_KEY,JSON.stringify([]));
+    }else{
+      setItems(JSON.parse(data));
+    }
   }, []);
 
   const putItems = items => {
-    let todos = [...items];
-    todos.push(items);
-    
-    setItems([...todos]);
-    
-    localStorage.setItem('items', JSON.stringify(todos));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    setItems(items);
   };
 
   const clearItems = () => {
+    localStorage.setItem(STORAGE_KEY,JSON.stringify([]));
     setItems([]);
-    localStorage.removeItem('todos');
   };
 
   return [items, putItems, clearItems];

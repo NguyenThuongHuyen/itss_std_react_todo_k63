@@ -19,13 +19,7 @@ import useStorage from '../hooks/storage';
 import {getKey} from "../lib/util";
 
 function Todo() {
-  const [items, putItems] = React.useState([
-      /* テストコード 開始 */
-    { key: getKey(), text: '日本語の宿題', done: false },
-    { key: getKey(), text: 'reactを勉強する', done: false },
-    { key: getKey(), text: '明日の準備をする', done: false },
-    /* テストコード 終了 */
-  ]);
+  const [items, putItems,cleanItems] = useStorage();
   const handleCheckTodoItem = (i) => {
     const newItems = items.map((item) => {
         if(item.key === i.key)
@@ -55,6 +49,9 @@ function Todo() {
   const handleChangeTab = (target) =>{
       setTab(target);
   };
+  const handleCleanItem = () =>{
+    cleanItems();
+};
   return (
     <div className="panel">
       <div className="panel-heading">
@@ -67,6 +64,9 @@ function Todo() {
       ))}
       <div className="panel-block">
         {itemTab().length} items
+      </div>
+      <div className="panel-block">
+            <button className="button is-light is-fullwidth" onClick={handleCleanItem}>全てのToDoを削除</button>
       </div>
     </div>
   );
